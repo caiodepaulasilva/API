@@ -1,4 +1,6 @@
 ﻿using Application.Commands;
+using Domain.DTO;
+using Domain.Enum;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -20,27 +22,34 @@ namespace Application.Handlers
 
         public async Task<string> Handle(GetHolidayCommand request, CancellationToken cancellationToken)
         {
-            var holidays = new List<Holiday>()
+            if (request.State.Equals(Enum.GetName(State.Acre)))
             {
-                new Holiday { Date = DateTime.ParseExact("01-01", "dd-MM", CultureInfo.CurrentCulture), Name =  "Fraternidade Universal", PopularName = "Ano novo"}, //Fixo
-                //new Holiday { Date = DateTime.Parse("02-27"), Name=  "Carnaval"},  //Pascoa - 47
-                new Holiday { Date = DateTime.ParseExact("13-04", "dd-MM", CultureInfo.CurrentCulture), Name =  "Paixão de Cristo"}, //Fixo
-                new Holiday { Date = DateTime.ParseExact("21-04", "dd-MM", CultureInfo.CurrentCulture), Name =  "Tiradentes"}, //Fixo
-                new Holiday { Date = DateTime.ParseExact("01-05", "dd-MM", CultureInfo.CurrentCulture), Name =  "Dia do Trabalho"}, //Fixo
-                new Holiday { Date = DateTime.ParseExact("30-05", "dd-MM", CultureInfo.CurrentCulture), Name =  "Corpus Christi"}, //Fixo
-                new Holiday { Date = DateTime.ParseExact("07-09", "dd-MM", CultureInfo.CurrentCulture), Name =  "Independência do Brasil"}, //Fixo
-                new Holiday { Date = DateTime.ParseExact("12-10", "dd-MM", CultureInfo.CurrentCulture), Name =  "Nossa Sr.a Aparecida - Padroeira do Brasil", PopularName = "Dia das Crianças"}, //Fixo
-                new Holiday { Date = DateTime.ParseExact("02-11", "dd-MM", CultureInfo.CurrentCulture), Name =  "Finados"}, //Fixo
-                new Holiday { Date = DateTime.ParseExact("15-11", "dd-MM", CultureInfo.CurrentCulture), Name =  "Proclamação da República"}, //Fixo
-                new Holiday { Date = DateTime.ParseExact("25-12", "dd-MM", CultureInfo.CurrentCulture), Name =  "Natal"}, //Fixo
-           };
+                return new HolidayAcre().GetHoliday(request.Date).Name;
+            }
+            else
+            {
 
-            await Task.Delay(1, cancellationToken);
-            return holidays.Find(f => f.Date == DateTime.ParseExact(request.Date, "dd-MM", CultureInfo.CurrentCulture)).Name;
+                var holidays = new List<Holiday>()
+                {
+                    new Holiday { Date = DateTime.ParseExact("01-01", "dd-MM", CultureInfo.CurrentCulture), Name =  "Fraternidade Universal", PopularName = "Ano novo"}, //Fixo
+                    //new Holiday { Date = DateTime.Parse("02-27"), Name=  "Carnaval"},  //Pascoa - 47
+                    new Holiday { Date = DateTime.ParseExact("13-04", "dd-MM", CultureInfo.CurrentCulture), Name =  "Paixão de Cristo"}, //Fixo
+                    new Holiday { Date = DateTime.ParseExact("21-04", "dd-MM", CultureInfo.CurrentCulture), Name =  "Tiradentes"}, //Fixo
+                    new Holiday { Date = DateTime.ParseExact("01-05", "dd-MM", CultureInfo.CurrentCulture), Name =  "Dia do Trabalho"}, //Fixo
+                    new Holiday { Date = DateTime.ParseExact("30-05", "dd-MM", CultureInfo.CurrentCulture), Name =  "Corpus Christi"}, //Móvel
+                    new Holiday { Date = DateTime.ParseExact("07-09", "dd-MM", CultureInfo.CurrentCulture), Name =  "Independência do Brasil"}, //Fixo
+                    new Holiday { Date = DateTime.ParseExact("12-10", "dd-MM", CultureInfo.CurrentCulture), Name =  "Nossa Sr.a Aparecida - Padroeira do Brasil", PopularName = "Dia das Crianças"}, //Fixo
+                    new Holiday { Date = DateTime.ParseExact("02-11", "dd-MM", CultureInfo.CurrentCulture), Name =  "Finados"}, //Fixo
+                    new Holiday { Date = DateTime.ParseExact("15-11", "dd-MM", CultureInfo.CurrentCulture), Name =  "Proclamação da República"}, //Fixo
+                    new Holiday { Date = DateTime.ParseExact("25-12", "dd-MM", CultureInfo.CurrentCulture), Name =  "Natal"}, //Fixo
+                };
+                await Task.Delay(1, cancellationToken);
+                return holidays.Find(f => f.Date == DateTime.ParseExact(request.Date, "dd-MM", CultureInfo.CurrentCulture)).Name;
+            }
         }
 
         private string Pascoa(string year)
-        {            
+        {
             Dictionary<string, string> datesPascoa = new Dictionary<string, string>()
             {
                 {"1", "14-04" },
