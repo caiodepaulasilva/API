@@ -16,8 +16,15 @@ namespace API.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] GetHolidayCommand command)
+        [HttpGet]
+        public async Task<IActionResult> GetByDateAsync(GetHolidayByDateCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetByNameAsync(GetHolidayByNameCommand command)
         {
             var response = await _mediator.Send(command);
             return Ok(response);
